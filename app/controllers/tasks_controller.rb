@@ -1,4 +1,6 @@
 class TasksController < ApplicationController
+    before_action :authenticate_user!
+
     def index
         @tasks = Task.all
     end
@@ -8,8 +10,22 @@ class TasksController < ApplicationController
     end
     
     def create
+        puts `[create]`
         @task = Task.create(task_params)
-        redirect_to tasks_path
+        # redirect_to @tasks
+
+        # @todo = Todo.new(todo_params)
+        # ログインユーザーのIDを挿入
+        @task.User_id = current_user.id
+
+        respond_to do |format|
+            if @task.save()
+                format.html {redirect_to tasks_path, notice: 'User was successfully created.'}
+            else
+                format.html {render :new}
+            end
+        end
+
     end
     
     def edit
@@ -23,9 +39,15 @@ class TasksController < ApplicationController
     end
 
     def destroy
+        puts `[destroy]`
+
         @task = Task.find(params[:id])
         @task.destroy
-        redirect_to tasks_path
+        # redirect_to tasks_path
+
+        respond_to do |format|
+            format.html { redirect_to tasks_path, notice: 'User was successfully destroyed.' }
+        end
     end
 
 private
