@@ -13,6 +13,7 @@
     <![endif]-->
   </head>
   <body>
+ 
     <header class="navbar navbar-fixed-top navbar-inverse">
       <div class="container">
         <%= link_to "sample app", '#', id: "logo" %>
@@ -24,11 +25,18 @@
           </ul>
         </nav>
       </div>
+ 
       <div class="container">
-        <p class="notice"><%= notice %></p>
-        <p class="alert"><%= alert %></p>
+        <% if user_signed_in? %>
+          LogOnUser:<%= current_user.email %>
+          <%= link_to 'SignOut', destroy_user_session_path, method: :delete %>
+        <% else %>
+          <%= link_to 'SingUp', new_user_registration_path %>
+          <%= link_to 'SignIn', new_user_session_path %>
+        <% end %>
       </div>
     </header>
+ 
     <div class="container">
       <%= yield %>
     </div>
